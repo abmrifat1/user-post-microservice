@@ -5,7 +5,7 @@ import { PostEntity } from "../entities/postEntity";
 import { createPostDto } from "../dtos/createPostDto";
 import { PostDto } from "../dtos/postDto";
 import { ResponseTransformerInterceptor } from '../interceptors/transform-interceptor';
-
+import { ApiCreatedResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 @Controller('posts')
 @UseInterceptors(ResponseTransformerInterceptor)
 export class PostController {
@@ -25,6 +25,8 @@ export class PostController {
     }
 
     @Post('/create')
+    @ApiCreatedResponse({description: 'post create'})
+    @ApiUnauthorizedResponse({description: 'user not found'})
     async createPost(@Body() postDto: createPostDto): Promise<PostDto> {
         const user = await this.postService.getSingleUser(postDto.userId).toPromise();
        if (user) {
@@ -39,11 +41,13 @@ export class PostController {
     }
 
     @Put(':id')
+    @ApiCreatedResponse({description: 'post update'})
     updatePost(@Param('id') id: number, @Body() postDto: createPostDto) {
         return this.postService.updatePost(id, postDto);
     }
 
     @Delete(':id')
+    @ApiCreatedResponse({description: 'post remove'})
     deletePost(@Param('id') id: number) {
        return this.postService.deletePost(id);
     }
