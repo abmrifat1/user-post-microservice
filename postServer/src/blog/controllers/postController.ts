@@ -1,11 +1,13 @@
 import { from, Observable } from "rxjs";
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, HttpException, HttpStatus,UseInterceptors } from '@nestjs/common';
 import { PostService } from '../services/postService';
 import { PostEntity } from "../entities/postEntity";
 import { createPostDto } from "../dtos/createPostDto";
 import { PostDto } from "../dtos/postDto";
+import { ResponseTransformerInterceptor } from '../interceptors/transform-interceptor';
 
 @Controller('posts')
+@UseInterceptors(ResponseTransformerInterceptor)
 export class PostController {
     constructor(private postService: PostService){
     }
@@ -23,8 +25,17 @@ export class PostController {
     }
 
     @Post('/create')
-    createPost(@Body() postDto: createPostDto): Promise<PostDto> {
+    async createPost(@Body() postDto: createPostDto): Promise<PostDto> {
+        const user = await this.postService.getSingleUser(postDto.userId).toPromise();
+       if (user) {
         return this.postService.createPost(postDto);
+           } else {
+        throw new HttpException({
+             "statusCode": 404,
+             "message": "No user found"
+          }, HttpStatus.NOT_FOUND); 
+       }
+        // return this.postService.createPost(postDto);
     }
 
     @Put(':id')

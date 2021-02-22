@@ -6,20 +6,26 @@ import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 export class UserService {
   public users = [
     {
-    id: 1,
-    name: "first user",
-    email: "f@gmail.com"
-  },
-  {
-    id: 2,
-    name: "2nd user",
-    email: "s@gmail.com"
-  },
-  {
-    id: 3,
-    name: "3rd user",
-    email: "t@gmail.com"
-  },
+      id: 1,
+      name: "super",
+      email: "super@gmail.com",
+      address: "dhaka,bd",
+      phone: "5566555"
+    },
+    {
+      id: 3,
+      name: "user-3",
+      email: "user-3@gmail.com",
+      address: "cumilla",
+      phone: "44443333"
+    },
+    {
+      id: 2,
+      name: "user-2 new",
+      email: "user-2@gmail.com",
+      address: "cumilla",
+      phone: "2223333"
+    }
 ]
   private logger = new Logger('AppController');
 
